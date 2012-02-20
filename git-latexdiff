@@ -24,6 +24,15 @@
 # - checkout only a subdirectory of the repo
 # - hardlink temporary checkouts as much as possible
 
+# Alternatives:
+#
+# There is another script doing essentially the same here:
+# https://github.com/cawka/latexdiff/blob/master/latexdiff-git
+# My experience is that latexdiff-git is more buggy than
+# git-latexdiff, but they probably just don't have the same bugs ;-)
+#
+# Ideally, these two scripts should be merged.
+
 usage () {
             cat << EOF
 Usage: $(basename $0) [options] OLD [NEW]
