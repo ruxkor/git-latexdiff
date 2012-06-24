@@ -44,6 +44,8 @@ Options:
     --help                this help message
     --main <file.tex>     name of the main LaTeX file
     --no-view             don't display the resulting PDF file
+    --bibtex, -b          run bibtex as well as latex 
+                             (pdflatex,bibtex,pdflatex,pdflatex)
     --view                view the resulting PDF file
                             (default if -o is not used)
     --pdf-viewer <cmd>    use <cmd> to view the PDF file (default: \$PDFVIEWER)
@@ -51,6 +53,7 @@ Options:
     -o <file>, --output <file>
                           copy resulting PDF into <file>
                              (usually ending with .pdf)
+    --verbos, -v          give more verbose output
 EOF
 }
 
@@ -83,6 +86,7 @@ main=
 view=maybe
 cleanup=1
 verbose=0
+bibtex=0
 output=
 initial_dir=$PWD
 
@@ -112,6 +116,9 @@ while test $# -ne 0; do
 	"-o"|"--output")
 	    test $# -gt 1 && shift || die "missing argument for $1"
 	    output=$1
+	    ;;
+	"-b"|"--bibtex")
+	    bibtex=1
 	    ;;
 	"--verbose"|"-v")
 	    verbose=1
@@ -242,6 +249,11 @@ if test -f Makefile ; then
     make || compile_error=1
 else
     pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+    if  test "$bibtex" = 1 ; then 
+	bibtex "$mainbase"  || compile_error=1
+	pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+	pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+    fi
 fi
 
 verbose_done
