@@ -44,7 +44,7 @@ Options:
     --help                this help message
     --main <file.tex>     name of the main LaTeX file
     --no-view             don't display the resulting PDF file
-    --bibtex, -b          run bibtex as well as latex 
+    --bibtex, -b          run bibtex as well as latex
                              (pdflatex,bibtex,pdflatex,pdflatex)
     --view                view the resulting PDF file
                             (default if -o is not used)
@@ -53,7 +53,7 @@ Options:
     -o <file>, --output <file>
                           copy resulting PDF into <file>
                              (usually ending with .pdf)
-    --verbos, -v          give more verbose output
+    --verbose, -v         give more verbose output
 EOF
 }
 
@@ -249,7 +249,7 @@ if test -f Makefile ; then
     make || compile_error=1
 else
     pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
-    if  test "$bibtex" = 1 ; then 
+    if test "$bibtex" = 1 ; then
 	bibtex "$mainbase"  || compile_error=1
 	pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
 	pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
