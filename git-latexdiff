@@ -56,6 +56,8 @@ Options:
                           copy resulting PDF into <file>
                              (usually ending with .pdf)
     --verbose, -v         give more verbose output
+    --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
+                             included files)
     --version             show git-latexdiff version.
 EOF
 }
@@ -92,6 +94,7 @@ verbose=0
 bibtex=0
 output=
 initial_dir=$PWD
+prepare_cmd=
 
 while test $# -ne 0; do
     case "$1" in
@@ -129,6 +132,10 @@ while test $# -ne 0; do
 	"--version")
 	    echo "$git_latexdiff_version"
             exit 0
+	    ;;
+	"--prepare")
+	    shift
+	    prepare_cmd="$1"
 	    ;;
         *)
 	    if test -z "$1" ; then
@@ -237,6 +244,14 @@ verbose_progress
 cd ..
 
 verbose_done
+
+for dir in old new
+do
+    verbose "Running preparation command $prepare_cmd in $dir/"
+    ( cd "$dir/$git_prefix/" && $prepare_cmd )
+    verbose_done
+done
+
 verbose "Running latexdiff --flatten old/$main new/$main > $main"
 
 latexdiff --flatten old/"$main" new/"$main" > diff.tex || die "latexdiff failed"
