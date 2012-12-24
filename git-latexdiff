@@ -33,6 +33,8 @@
 #
 # Ideally, these two scripts should be merged.
 
+git_latexdiff_version=1.0
+
 usage () {
             cat << EOF
 Usage: $(basename $0) [options] OLD [NEW]
@@ -54,6 +56,7 @@ Options:
                           copy resulting PDF into <file>
                              (usually ending with .pdf)
     --verbose, -v         give more verbose output
+    --version             show git-latexdiff version.
 EOF
 }
 
@@ -122,6 +125,10 @@ while test $# -ne 0; do
 	    ;;
 	"--verbose"|"-v")
 	    verbose=1
+	    ;;
+	"--version")
+	    echo "$git_latexdiff_version"
+            exit 0
 	    ;;
         *)
 	    if test -z "$1" ; then
