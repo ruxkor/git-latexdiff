@@ -278,15 +278,13 @@ if test -f Makefile ; then
 else
     pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
     if test "$bibtex" = 1 ; then
-			bibtex "$mainbase"  || compile_error=1
-			pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
-			pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+	bibtex "$mainbase"  || compile_error=1
     fi
     if test "$biber" = 1 ; then
-			biber "$mainbase"  || compile_error=1
-			pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
-			pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+	biber "$mainbase"  || compile_error=1
     fi
+    pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+    pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
 fi
 
 verbose_done
