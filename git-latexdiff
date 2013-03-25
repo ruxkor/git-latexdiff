@@ -253,9 +253,13 @@ verbose_done
 verbose "Checking out old and new version"
 
 cd old || die "Cannot cd to old/"
+# in case the work directory contained uncommited important files
+ln -s -t . "$initial_dir"/*
+
 git --git-dir="$git_dir" --work-tree=. checkout "$old" -- . || die "checkout failed for old/"
 verbose_progress
 cd ../new || die "Cannot cd to new/"
+ln -s -t . "$initial_dir"/*
 git --git-dir="$git_dir" --work-tree=. checkout "$new" -- . || die "checkout failed for new/"
 verbose_progress
 cd ..
