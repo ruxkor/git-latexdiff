@@ -58,6 +58,7 @@ Options:
     -o <file>, --output <file>
                           copy resulting PDF into <file>
                              (usually ending with .pdf)
+    --tmpprefix           where temporary directory will be created (default: /tmp)
     --verbose, -v         give more verbose output
     --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
                              included files)
@@ -98,6 +99,7 @@ bibtex=0
 biber=0
 output=
 initial_dir=$PWD
+tmpdir_prefix="/tmp"
 prepare_cmd=
 uselatexmk=
 
@@ -148,6 +150,10 @@ while test $# -ne 0; do
         "--latexmk")
             uselatexmk=1
             ;;
+        "--tmpdirprefix")
+	    shift
+	    tmpdir_prefix="$1"
+	    ;;
         *)
 	    if test -z "$1" ; then
 		echo "Empty string not allowed as argument"
@@ -236,7 +242,7 @@ git_dir=$(cd "$git_dir"; pwd)
 
 main=$git_prefix/$main
 
-tmpdir=$initial_dir/git-latexdiff.$$
+tmpdir=$tmpdir_prefix/git-latexdiff.$$
 mkdir "$tmpdir" || die "Cannot create temporary directory."
 
 cd "$tmpdir" || die "Cannot cd to $tmpdir"
