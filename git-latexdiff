@@ -54,6 +54,7 @@ Options:
                             (default if -o is not used)
     --pdf-viewer <cmd>    use <cmd> to view the PDF file (default: \$PDFVIEWER)
     --no-cleanup          don't cleanup temp dir after running
+    --latexmk             use latexmk
     -o <file>, --output <file>
                           copy resulting PDF into <file>
                              (usually ending with .pdf)
@@ -98,6 +99,7 @@ biber=0
 output=
 initial_dir=$PWD
 prepare_cmd=
+uselatexmk=
 
 while test $# -ne 0; do
     case "$1" in
@@ -143,6 +145,9 @@ while test $# -ne 0; do
 	    shift
 	    prepare_cmd="$1"
 	    ;;
+        "--latexmk")
+            uselatexmk=1
+            ;;
         *)
 	    if test -z "$1" ; then
 		echo "Empty string not allowed as argument"
@@ -275,6 +280,8 @@ compile_error=0
 cd new/"$maindir" || die "Can't cd to new/$maindir"
 if test -f Makefile ; then
     make || compile_error=1
+elif test "$uselatexmk" = 1; then
+    latexmk -f -pdf -silent "$mainbase"
 else
     pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
     if test "$bibtex" = 1 ; then
