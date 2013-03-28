@@ -260,7 +260,10 @@ git --git-dir="$git_dir" --work-tree=. checkout "$old" -- . || die "checkout fai
 verbose_progress
 cd ../new || die "Cannot cd to new/"
 ln -s -t . "$initial_dir"/*
-git --git-dir="$git_dir" --work-tree=. checkout "$new" -- . || die "checkout failed for new/"
+if test "$new" != "--"; then
+    # if new == "--" then diff working dir
+    git --git-dir="$git_dir" --work-tree=. checkout "$new" -- . || die "checkout failed for new/"
+fi
 verbose_progress
 cd ..
 
