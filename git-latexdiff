@@ -36,7 +36,7 @@
 git_latexdiff_version=1.0
 
 usage () {
-            cat << EOF
+    cat << EOF
 Usage: $(basename $0) [options] OLD [NEW]
        $(basename $0) [options] OLD --
 Call latexdiff on two Git revisions of a file.
@@ -56,6 +56,20 @@ Options:
                             (default if -o is not used)
     --pdf-viewer <cmd>    use <cmd> to view the PDF file (default: \$PDFVIEWER)
     --no-cleanup          don't cleanup temp dir after running
+    --cleanup MODE	  Cleanup temporary files according to MODE:
+
+                           - keeppdf (default): keep only the
+                                  generated PDF file
+
+                           - none: keep all temporary files
+                                  (may eat your diskspace)
+
+                           - all: erase all generated files.
+                                  Problematic with --view when the
+                                  viewer is e.g. evince, and doesn't
+                                  like when the file being viewed is
+                                  deleted.
+
     --latexmk             use latexmk
     -o <file>, --output <file>
                           copy resulting PDF into <file>
@@ -91,11 +105,17 @@ verbose_done () {
     fi
 }
 
+verbose_say () {
+    if test "$verbose" = 1 ; then
+	printf "%s\n" "$@"
+    fi
+}
+
 old=
 new=
 main=
 view=maybe
-cleanup=1
+cleanup=keeppdf
 verbose=0
 bibtex=0
 biber=0
@@ -126,8 +146,21 @@ while test $# -ne 0; do
 	    PDFVIEWER="$1"
 	    ;;
 	"--no-cleanup")
-	    cleanup=0
+	    cleanup=none
 	    ;;
+        "--cleanup")
+            shift
+            case "$1" in
+                "none"|"all"|"keeppdf")
+                    cleanup="$1"
+                    ;;
+                *)
+                    echo "Bad argument --cleanup $1"
+                    usage
+                    exit 1
+                    ;;
+            esac
+            ;;
 	"-o"|"--output")
 	    test $# -gt 1 && shift || die "missing argument for $1"
 	    output=$1
@@ -331,6 +364,12 @@ if test "$compile_error" = "1" ; then
     exit 1
 fi
 
+if [ -f "$pdffile" ]; then
+    new_pdffile="$tmpdir"/"$pdffile"
+    mv "$pdffile" "$new_pdffile"
+    pdffile="$new_pdffile"
+fi
+
 if test -n "$output" ; then
     abs_pdffile="$PWD/$pdffile"
     (cd "$initial_dir" && cp "$abs_pdffile" "$output")
@@ -341,8 +380,18 @@ if test "$view" = 1  || test "$view" = maybe  && test -z "$output" ; then
     "$PDFVIEWER" "$pdffile"
 fi
 
-if test "$cleanup" = 1 ; then
-    verbose "Cleaning-up result"
-    rm -fr "$tmpdir"
-    verbose_done
-fi
+case "$cleanup" in
+    "all")
+	verbose "Cleaning-up result"
+	rm -fr "$tmpdir"
+	verbose_done
+	;;
+    "keeppdf")
+	verbose "Cleaning-up all but pdf (kept in $pdffile)"
+	rm -fr "$tmpdir"/old "$tmpdir"/new "$tmpdir"/diff
+	verbose_done
+	;;
+    "none")
+	verbose_say "Generated files kept in $tmpdir/"
+	;;
+esac
