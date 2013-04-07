@@ -364,17 +364,16 @@ if test "$compile_error" = "1" ; then
     exit 1
 fi
 
-if [ -f "$pdffile" ]; then
+if test -n "$output" ; then
+    abs_pdffile="$PWD/$pdffile"
+    (cd "$initial_dir" && mv "$abs_pdffile" "$output")
+    echo "Output written on $output"
+elif [ -f "$pdffile" ]; then
     new_pdffile="$tmpdir"/"$pdffile"
     mv "$pdffile" "$new_pdffile"
     pdffile="$new_pdffile"
 fi
 
-if test -n "$output" ; then
-    abs_pdffile="$PWD/$pdffile"
-    (cd "$initial_dir" && cp "$abs_pdffile" "$output")
-    echo "Output written on $output"
-fi
 
 if test "$view" = 1  || test "$view" = maybe  && test -z "$output" ; then
     "$PDFVIEWER" "$pdffile"
