@@ -72,8 +72,8 @@ Options:
 
     --latexmk             use latexmk
     -o <file>, --output <file>
-                          copy resulting PDF into <file>
-                             (usually ending with .pdf)
+                          copy resulting PDF into <file> (usually ending with .pdf)
+			  Implies "--cleanup all"
     --tmpprefix           where temporary directory will be created (default: /tmp)
     --verbose, -v         give more verbose output
     --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
@@ -164,6 +164,7 @@ while test $# -ne 0; do
 	"-o"|"--output")
 	    test $# -gt 1 && shift || die "missing argument for $1"
 	    output=$1
+	    cleanup=all
 	    ;;
 	"-b"|"--bibtex")
 	    bibtex=1
