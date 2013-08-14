@@ -272,8 +272,8 @@ fi
 verbose "Creating temporary directories"
 
 git_prefix=$(git rev-parse --show-prefix)
-cd "$(git rev-parse --show-cdup)" || die "Can't cd back to repository root"
 git_dir="$(git rev-parse --git-dir)" || die "Not a git repository?"
+cd "$(git rev-parse --show-cdup)" || die "Can't cd back to repository root"
 git_dir=$(cd "$git_dir"; pwd)
 
 main=$git_prefix/$main
