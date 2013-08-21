@@ -20,7 +20,7 @@
 # To install, just copy git-latexdiff in your $PATH.
 
 # Missing features (patches welcome ;-):
-# - diff the index or the current worktree
+# - diff the index
 # - checkout only a subdirectory of the repo
 # - hardlink temporary checkouts as much as possible
 
@@ -31,7 +31,11 @@
 # My experience is that latexdiff-git is more buggy than
 # git-latexdiff, but they probably just don't have the same bugs ;-)
 #
-# Ideally, these two scripts should be merged.
+# There are a bunch of other alternatives cited here:
+#
+#   http://tex.stackexchange.com/questions/1325/using-latexdiff-with-git
+#
+# Ideally, these scripts should be merged.
 
 git_latexdiff_version=1.0
 
