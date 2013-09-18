@@ -1,3 +1,5 @@
+gitexecdir = ${shell git --exec-path}
+
 -include ./config.mak
 
 ifndef SHELL_PATH
