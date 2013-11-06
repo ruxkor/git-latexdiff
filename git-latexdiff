@@ -255,11 +255,24 @@ case "$view" in
 	;;
 esac
 
+check_knitr () {
+    if test -z "$prepare_cmd"; then
+	prepare_cmd="Rscript -e \"library(knitr); knit('$main')\""
+    fi
+    main="${main%\.*}.tex"
+}
+
 if test -z "$main" ; then
     printf "%s" "No --main provided, trying to guess ... "
     main=$(git grep -l '^[ \t]*\\documentclass')
     # May return multiple results, but if so the result won't be a file.
     if test -r "$main" ; then
+	ext=${main##*\.}
+        case "$ext" in
+	    Rnw) check_knitr ;;
+	    Rtex) check_knitr ;;
+	    *) ;;
+	esac
 	echo "Using $main as the main file."
     else
 	if test -z "$main" ; then
