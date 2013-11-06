@@ -83,6 +83,7 @@ Options:
 			  Implies "--cleanup all"
     --tmpprefix           where temporary directory will be created (default: /tmp)
     --verbose, -v         give more verbose output
+    --quiet               redirect output from subprocesses to log files
     --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
                              included files)
     --ln-untracked        symlink uncommited files from the working directory
@@ -133,6 +134,7 @@ tmpdir_prefix="/tmp"
 prepare_cmd=
 uselatexmk=
 ln_untracked=0
+quiet=0
 
 while test $# -ne 0; do
     case "$1" in
@@ -183,6 +185,9 @@ while test $# -ne 0; do
 	    ;;
 	"--verbose"|"-v")
 	    verbose=1
+	    ;;
+        "--quiet")
+	    quiet=1
 	    ;;
 	"--version")
 	    echo "$git_latexdiff_version"
@@ -270,6 +275,16 @@ check_knitr () {
     main="${main%\.*}.tex"
 }
 
+log_cmd () {
+    log=$1
+    shift
+    if [ "$quiet" = 1 ]; then
+	"$@" >$log 2>&1
+    else
+	"$@"
+    fi
+}
+
 if test -z "$main" ; then
     printf "%s" "No --main provided, trying to guess ... "
     main=$(git grep -l '^[ \t]*\\documentclass')
@@ -340,9 +355,9 @@ verbose_done
 for dir in old new
 do
     verbose "Running preparation command $prepare_cmd in $dir/$git_prefix"
-    ( cd "$dir/$git_prefix/" && eval $prepare_cmd )
+    ( cd "$dir/$git_prefix/" && log_cmd prepare.log eval "$prepare_cmd" )
     if test ! -f "$dir/$main"; then
-      die "$prepare_cmd did not produce $dir/$main"
+      die "$prepare_cmd did not produce $dir/$main."
     fi
     verbose_done
 done
@@ -366,19 +381,24 @@ verbose "Compiling result"
 compile_error=0
 cd new/"$maindir" || die "Can't cd to new/$maindir"
 if test -f Makefile ; then
-    make || compile_error=1
+    log_cmd make.log make || compile_error=1
 elif test "$uselatexmk" = 1; then
-    latexmk -f -pdf -silent "$mainbase"
+    log_cmd latexmk.log latexmk -f -pdf -silent "$mainbase" || compile_error=1
 else
-    pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+    if [ "$quiet" = 1 ]; then
+	latexopt="-interaction=nonstopmode"
+    else
+	latexopt="-interaction=errorstopmode"
+    fi
+    log_cmd pdflatex1.log pdflatex $latexopt "$mainbase" || compile_error=1
     if test "$bibtex" = 1 ; then
-	bibtex "$mainbase"  || compile_error=1
+	log_cmd bibtex.log bibtex "$mainbase" || compile_error=1
     fi
     if test "$biber" = 1 ; then
-	biber "$mainbase"  || compile_error=1
+	log_cmd biber.log biber "$mainbase" || compile_error=1
     fi
-    pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
-    pdflatex --interaction errorstopmode "$mainbase" || compile_error=1
+    log_cmd pdflatex2.log pdflatex $latexopt "$mainbase" || compile_error=1
+    log_cmd pdflatex3.log pdflatex $latexopt "$mainbase" || compile_error=1
 fi
 
 verbose_done
