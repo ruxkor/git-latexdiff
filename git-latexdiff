@@ -336,10 +336,13 @@ do
     verbose_done
 done
 
-verbose "Running latexdiff --flatten old/$main new/$main > $main"
+verbose "Running latexdiff --flatten old/$main new/$main > ./diff.tex"
 
 latexdiff --flatten old/"$main" new/"$main" > diff.tex || die "latexdiff failed"
 
+verbose "mv ./diff.tex new/$main"
+
+mv -f new/"$main" new/"$main.orig"
 mv -f diff.tex new/"$main"
 
 verbose_done
