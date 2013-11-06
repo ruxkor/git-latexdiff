@@ -37,6 +37,9 @@
 #
 # Ideally, these scripts should be merged.
 
+set -o errexit
+set -o noclobber
+
 git_latexdiff_version=1.0
 
 usage () {
