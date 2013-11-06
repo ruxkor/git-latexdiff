@@ -385,7 +385,7 @@ fi
 
 if test "$compile_error" = "1" ; then
     echo "Error during compilation. Please examine and cleanup if needed:"
-    echo "Directory: $tmpdir/new/$maindir/"
+    echo "Directory: $tmpdir/new/$maindir"
     echo "     File: $mainbase.tex"
     # Don't clean up to let the user diagnose.
     exit 1
