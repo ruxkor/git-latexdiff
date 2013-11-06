@@ -303,7 +303,7 @@ mkdir "$tmpdir" || die "Cannot create temporary directory."
 
 cd "$tmpdir" || die "Cannot cd to $tmpdir"
 
-mkdir old new diff || die "Cannot create old, new and diff directories."
+mkdir old new || die "Cannot create old and new directories."
 
 verbose_done
 verbose "Checking out old and new version"
@@ -411,7 +411,7 @@ case "$cleanup" in
 	;;
     "keeppdf")
 	verbose "Cleaning-up all but pdf (kept in $pdffile)"
-	rm -fr "$tmpdir"/old "$tmpdir"/new "$tmpdir"/diff
+	rm -fr "$tmpdir"/old "$tmpdir"/new
 	verbose_done
 	;;
     "none")
