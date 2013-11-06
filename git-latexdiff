@@ -315,8 +315,11 @@ verbose_done
 
 for dir in old new
 do
-    verbose "Running preparation command $prepare_cmd in $dir/"
-    ( cd "$dir/$git_prefix/" && $prepare_cmd )
+    verbose "Running preparation command $prepare_cmd in $dir/$git_prefix"
+    ( cd "$dir/$git_prefix/" && eval $prepare_cmd )
+    if test ! -f "$dir/$main"; then
+      die "$prepare_cmd did not produce $dir/$main"
+    fi
     verbose_done
 done
 
