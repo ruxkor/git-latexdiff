@@ -85,6 +85,7 @@ Options:
     --verbose, -v         give more verbose output
     --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
                              included files)
+    --no-ln-untracked     don't symlink uncommited files from the working directory
     --version             show git-latexdiff version.
 EOF
 }
@@ -131,6 +132,7 @@ initial_dir=$PWD
 tmpdir_prefix="/tmp"
 prepare_cmd=
 uselatexmk=
+ln_untracked=1
 
 while test $# -ne 0; do
     case "$1" in
@@ -192,6 +194,12 @@ while test $# -ne 0; do
 	    ;;
         "--latexmk")
             uselatexmk=1
+            ;;
+        "--ln-untracked")
+            ln_untracked=1
+            ;;
+        "--no-ln-untracked")
+            ln_untracked=0
             ;;
         "--tmpdirprefix")
 	    shift
@@ -309,13 +317,16 @@ verbose_done
 verbose "Checking out old and new version"
 
 cd old || die "Cannot cd to old/"
-# in case the work directory contained uncommited important files
-ln -s "$initial_dir"/* .
+if test "$ln_untracked" = 1; then
+  ln -s "$initial_dir"/* .
+fi
 
 git --git-dir="$git_dir" --work-tree=. checkout "$old" -- . || die "checkout failed for old/"
 verbose_progress
 cd ../new || die "Cannot cd to new/"
-ln -s "$initial_dir"/* .
+if test "$ln_untracked" = 1; then
+  ln -s "$initial_dir"/* .
+fi
 if test "$new" != "--"; then
     # if new == "--" then diff working dir (already there thanks to ln
     # -s above).
