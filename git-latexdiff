@@ -85,7 +85,7 @@ Options:
     --verbose, -v         give more verbose output
     --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
                              included files)
-    --no-ln-untracked     don't symlink uncommited files from the working directory
+    --ln-untracked        symlink uncommited files from the working directory
     --version             show git-latexdiff version.
 EOF
 }
@@ -132,7 +132,7 @@ initial_dir=$PWD
 tmpdir_prefix="/tmp"
 prepare_cmd=
 uselatexmk=
-ln_untracked=1
+ln_untracked=0
 
 while test $# -ne 0; do
     case "$1" in
