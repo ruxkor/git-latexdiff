@@ -88,6 +88,7 @@ Options:
                              included files)
     --ln-untracked        symlink uncommited files from the working directory
     --version             show git-latexdiff version.
+    --subtree             checkout the tree at and below the main file
     --ignore-makefile     ignore the Makefile, build as though it doesn't exist
 EOF
 }
@@ -133,6 +134,7 @@ output=
 initial_dir=$PWD
 tmpdir_prefix="/tmp"
 prepare_cmd=
+subtree=0
 uselatexmk=
 ln_untracked=0
 quiet=0
@@ -196,6 +198,9 @@ while test $# -ne 0; do
 	"--version")
 	    echo "$git_latexdiff_version"
             exit 0
+	    ;;
+	"--subtree")
+	    subtree=1
 	    ;;
 	"--prepare")
 	    shift
@@ -340,7 +345,13 @@ if test "$ln_untracked" = 1; then
   ln -s "$initial_dir"/* .
 fi
 
-git --git-dir="$git_dir" --work-tree=. checkout "$old" -- . || die "checkout failed for old/"
+if test "$subtree" = 1; then
+  checkoutroot=$git_prefix
+else
+  checkoutroot="."
+fi
+ 
+git --git-dir="$git_dir" --work-tree=. checkout "$old" -- "$checkoutroot" || die "checkout failed for old/"
 verbose_progress
 cd ../new || die "Cannot cd to new/"
 if test "$ln_untracked" = 1; then
@@ -349,7 +360,7 @@ fi
 if test "$new" != "--"; then
     # if new == "--" then diff working dir (already there thanks to ln
     # -s above).
-    git --git-dir="$git_dir" --work-tree=. checkout "$new" -- . || die "checkout failed for new/"
+    git --git-dir="$git_dir" --work-tree=. checkout "$new" -- "$checkoutroot" || die "checkout failed for new/"
 fi
 verbose_progress
 cd ..
