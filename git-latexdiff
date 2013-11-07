@@ -290,12 +290,6 @@ if test -z "$main" ; then
     main=$(git grep -l '^[ \t]*\\documentclass')
     # May return multiple results, but if so the result won't be a file.
     if test -r "$main" ; then
-	ext=${main##*\.}
-        case "$ext" in
-	    Rnw) check_knitr ;;
-	    Rtex) check_knitr ;;
-	    *) ;;
-	esac
 	echo "Using $main as the main file."
     else
 	if test -z "$main" ; then
@@ -307,6 +301,13 @@ if test -z "$main" ; then
 	die "Please, provide a main file with --main FILE.tex."
     fi
 fi
+
+ext=${main##*\.}
+case "$ext" in
+    Rnw) check_knitr ;;
+    Rtex) check_knitr ;;
+    *) ;;
+esac
 
 if test ! -r "$main" ; then
     die "Cannot read $main."
