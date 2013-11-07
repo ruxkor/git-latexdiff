@@ -81,7 +81,7 @@ Options:
     -o <file>, --output <file>
                           copy resulting PDF into <file> (usually ending with .pdf)
 			  Implies "--cleanup all"
-    --tmpprefix           where temporary directory will be created (default: /tmp)
+    --tmpdirprefix           where temporary directory will be created (default: /tmp)
     --verbose, -v         give more verbose output
     --quiet               redirect output from subprocesses to log files
     --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
