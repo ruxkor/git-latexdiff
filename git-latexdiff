@@ -78,6 +78,7 @@ Options:
                                   deleted.
 
     --latexmk             use latexmk
+    --latexopt            pass additional options to latex (e.g. -shell-escape)
     -o <file>, --output <file>
                           copy resulting PDF into <file> (usually ending with .pdf)
 			  Implies "--cleanup all"
@@ -133,6 +134,7 @@ initial_dir=$PWD
 tmpdir_prefix="/tmp"
 prepare_cmd=
 uselatexmk=
+latexopt=
 ln_untracked=0
 quiet=0
 
@@ -200,6 +202,10 @@ while test $# -ne 0; do
         "--latexmk")
             uselatexmk=1
             ;;
+	"--latexopt")
+	    shift
+	    latexopt=$1
+	    ;;
         "--ln-untracked")
             ln_untracked=1
             ;;
@@ -387,9 +393,9 @@ elif test "$uselatexmk" = 1; then
     log_cmd latexmk.log latexmk -f -pdf -silent "$mainbase" || compile_error=1
 else
     if [ "$quiet" = 1 ]; then
-	latexopt="-interaction=nonstopmode"
+	latexopt="$latexopt -interaction=nonstopmode"
     else
-	latexopt="-interaction=errorstopmode"
+	latexopt="$latexopt -interaction=errorstopmode"
     fi
     log_cmd pdflatex1.log pdflatex $latexopt "$mainbase" || compile_error=1
     if test "$bibtex" = 1 ; then
