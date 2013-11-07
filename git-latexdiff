@@ -88,6 +88,7 @@ Options:
                              included files)
     --ln-untracked        symlink uncommited files from the working directory
     --version             show git-latexdiff version.
+    --ignore-makefile     ignore the Makefile, build as though it doesn't exist
 EOF
 }
 
@@ -172,6 +173,9 @@ while test $# -ne 0; do
                     ;;
             esac
             ;;
+	"--ignore-makefile")
+	    ignoremake=1
+	    ;;
 	"-o"|"--output")
 	    test $# -gt 1 && shift || die "missing argument for $1"
 	    output=$1
@@ -380,7 +384,7 @@ verbose "Compiling result"
 
 compile_error=0
 cd new/"$maindir" || die "Can't cd to new/$maindir"
-if test -f Makefile ; then
+if test -f Makefile && test "$ignoremake" != 1 ; then
     log_cmd make.log make || compile_error=1
 elif test "$uselatexmk" = 1; then
     log_cmd latexmk.log latexmk -f -pdf -silent "$mainbase" || compile_error=1
