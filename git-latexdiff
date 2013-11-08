@@ -57,13 +57,13 @@ Options:
     --no-view             don't display the resulting PDF file
     --bibtex, -b          run bibtex as well as latex
                              (pdflatex,bibtex,pdflatex,pdflatex)
-    --biber			          run BibLaTex-Biber as well as latex
+    --biber               run BibLaTex-Biber as well as latex
                              (pdflatex,bibtex,pdflatex,pdflatex)
     --view                view the resulting PDF file
                             (default if -o is not used)
     --pdf-viewer <cmd>    use <cmd> to view the PDF file (default: \$PDFVIEWER)
     --no-cleanup          don't cleanup temp dir after running
-    --cleanup MODE	  Cleanup temporary files according to MODE:
+    --cleanup MODE        Cleanup temporary files according to MODE:
 
                            - keeppdf (default): keep only the
                                   generated PDF file
@@ -80,8 +80,8 @@ Options:
     --latexmk             use latexmk
     -o <file>, --output <file>
                           copy resulting PDF into <file> (usually ending with .pdf)
-			  Implies "--cleanup all"
-    --tmpdirprefix           where temporary directory will be created (default: /tmp)
+                          Implies "--cleanup all"
+    --tmpdirprefix        where temporary directory will be created (default: /tmp)
     --verbose, -v         give more verbose output
     --quiet               redirect output from subprocesses to log files
     --prepare <cmd>       run <cmd> before latexdiff (e.g. run make to generate
