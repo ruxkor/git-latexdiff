@@ -350,7 +350,7 @@ if test "$subtree" = 1; then
 else
   checkoutroot="."
 fi
- 
+
 git --git-dir="$git_dir" --work-tree=. checkout "$old" -- "$checkoutroot" || die "checkout failed for old/"
 verbose_progress
 cd ../new || die "Cannot cd to new/"
