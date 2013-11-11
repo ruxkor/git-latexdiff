@@ -247,6 +247,9 @@ done
 if test -z "$new" ; then
     new=HEAD
 fi
+if test "$new" = "--"; then
+    ln_untracked=1
+fi
 
 if test -z "$old" ; then
     echo "fatal: Please, provide at least one revision to diff with."
