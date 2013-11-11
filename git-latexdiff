@@ -361,7 +361,7 @@ else
   checkoutroot="."
 fi
 
-git --git-dir="$git_dir" --work-tree=. checkout "$old" -- "$checkoutroot" || die "checkout failed for old/"
+(cd "$git_dir" && git archive --format=tar "$old" "$checkoutroot") | tar -xf -
 verbose_progress
 cd ../new || die "Cannot cd to new/"
 if test "$ln_untracked" = 1; then
@@ -370,7 +370,7 @@ fi
 if test "$new" != "--"; then
     # if new == "--" then diff working dir (already there thanks to ln
     # -s above).
-    git --git-dir="$git_dir" --work-tree=. checkout "$new" -- "$checkoutroot" || die "checkout failed for new/"
+    (cd "$git_dir" && git archive --format=tar "$new" "$checkoutroot") | tar -xf -
 fi
 verbose_progress
 cd ..
