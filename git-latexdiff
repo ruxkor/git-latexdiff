@@ -1,6 +1,7 @@
 #! /bin/sh
 
-# Author: Matthieu Moy <Matthieu.Moy@imag.fr> (2012, 2013)
+# Main author: Matthieu Moy <Matthieu.Moy@imag.fr> (2012, 2013)
+# (See the Git history for other contributors)
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
