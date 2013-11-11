@@ -90,6 +90,7 @@ Options:
     --ln-untracked        symlink uncommited files from the working directory
     --version             show git-latexdiff version.
     --subtree             checkout the tree at and below the main file
+                             (enabled by default, disable with --whole-tree)
     --whole-tree          checkout the whole tree (contrast with --subtree)
     --ignore-makefile     ignore the Makefile, build as though it doesn't exist
 EOF
@@ -136,7 +137,7 @@ output=
 initial_dir=$PWD
 tmpdir_prefix="/tmp"
 prepare_cmd=
-subtree=0
+subtree=1
 uselatexmk=
 latexopt=
 ln_untracked=0
