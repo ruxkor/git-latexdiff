@@ -90,6 +90,7 @@ Options:
     --ln-untracked        symlink uncommited files from the working directory
     --version             show git-latexdiff version.
     --subtree             checkout the tree at and below the main file
+    --whole-tree          checkout the whole tree (contrast with --subtree)
     --ignore-makefile     ignore the Makefile, build as though it doesn't exist
 EOF
 }
@@ -203,6 +204,9 @@ while test $# -ne 0; do
 	    ;;
 	"--subtree")
 	    subtree=1
+	    ;;
+	"--whole-tree")
+	    subtree=0
 	    ;;
 	"--prepare")
 	    shift
