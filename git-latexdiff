@@ -366,6 +366,7 @@ else
   checkoutroot="."
 fi
 
+# Checkout a subtree, without touching the index ("git checkout" would)
 (cd "$git_dir" && git archive --format=tar "$old" "$checkoutroot") | tar -xf -
 verbose_progress
 cd ../new || die "Cannot cd to new/"
