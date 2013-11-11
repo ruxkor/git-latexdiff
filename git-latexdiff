@@ -21,7 +21,6 @@
 
 # Missing features (patches welcome ;-):
 # - diff the index
-# - checkout only a subdirectory of the repo
 # - hardlink temporary checkouts as much as possible
 
 # Alternatives:
